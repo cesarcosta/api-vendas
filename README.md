@@ -15,3 +15,11 @@ Estrutura de pastas:
 - A senha deve ser armazenada com criptografia;
 - Não pode haver mais de um produto com o mesmo nome;
 - Não pode haver um mesmo email sendo usado por mais de um usuário;
+
+### Executando o projeto
+
+Instalar dependências: `yarn`
+
+Iniciar servidor: `yarn dev`
+
+Acessar o endereço: `http://localhost:3333`

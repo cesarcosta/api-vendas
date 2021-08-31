@@ -20,6 +20,7 @@ app.use(routes);
 
 app.use(errors());
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((error: Error, request: Request, response: Response, _next: NextFunction) => {
   if (error instanceof AppError) {
     return response.status(error.statusCode).json({
@@ -34,5 +35,6 @@ app.use((error: Error, request: Request, response: Response, _next: NextFunction
 });
 
 app.listen(PORT, () => {
+  // eslint-disable-next-line no-console
   console.log(`Server started on port ${PORT} 🏆`);
 });

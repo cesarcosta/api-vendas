@@ -1,10 +1,9 @@
 import CustomerRepository from '@modules/customers/typeorm/repositories/CustomerRepository';
-import Product from '@modules/products/typeorm/entities/Product';
 import ProductRepository from '@modules/products/typeorm/repositories/ProductRepository';
+import OrderRepository from '../typeorm/repositories/OrderRepository';
 import AppError from '@shared/errors/AppError';
 import { getCustomRepository } from 'typeorm';
-import Order from './typeorm/entitites/Order';
-import OrderRepository from './typeorm/repositories/OrderRepository';
+import Order from '../typeorm/entities/Order';
 
 interface IProduct {
   id: string;
@@ -61,18 +60,17 @@ export default class CreateOrderService {
       price: existsProducts.filter(p => p.id === product.id)[0].price,
     }));
 
-    const order = orderRepository.create({
+    const order = await orderRepository.createOrder({
       customer: customerExists,
-      ordersProducts: serializedProducts,
+      products: serializedProducts,
     });
 
     const { ordersProducts } = order;
 
-    await orderRepository.save(order);
-
     const updatedProductQuantity = ordersProducts.map(product => ({
-      id: product.id,
-      quantity: existsProducts.filter(p => p.id === product.id)[0].quantity - product.quantity,
+      id: product.product_id,
+      quantity:
+        existsProducts.filter(p => p.id === product.product_id)[0].quantity - product.quantity,
     }));
 
     await productRepository.save(updatedProductQuantity);

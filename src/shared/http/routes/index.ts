@@ -5,6 +5,7 @@ import sessionsRouter from '@modules/users/routes/session.routes';
 import passwordRouter from '@modules/users/routes/password.routes';
 import profileRouter from '@modules/users/routes/profile.routes';
 import customersRouter from '@modules/customers/customer.routes';
+import ordersRouter from '@modules/orders/routes/order.routes';
 
 const routes = Router();
 
@@ -14,6 +15,7 @@ routes.use('/sessions', sessionsRouter);
 routes.use('/password', passwordRouter);
 routes.use('/profile', profileRouter);
 routes.use('/customers', customersRouter);
+routes.use('/orders', ordersRouter);
 
 routes.get('/', (request: Request, response: Response) => {
   response.json({ message: 'Hello Dev!' });

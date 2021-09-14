@@ -37,3 +37,7 @@ postgres:12.2
 ##### Executando container do Redis
 
 docker run -d --name redis -p 6379:6379 -t redis:alpine
+
+##### Executando container do Redis Client
+
+docker run --name redis-client -v redisinsight:/db -p 8001:8001 -d -t redislabs/redisinsight:latest

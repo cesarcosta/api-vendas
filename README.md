@@ -23,3 +23,17 @@ Instalar dependências: `yarn`
 Iniciar servidor: `yarn dev`
 
 Acessar o endereço: `http://localhost:3333`
+
+#### Executando container do Postgres
+
+docker run -d --rm --name db \
+-p 5432:5432 \
+-e POSTGRES_PASSWORD=12qwASzx@@ \
+-e TZ=America/Sao_Paulo \
+-v /opt/eleva/postgresql/12:/var/lib/postgresql/data \
+-v /opt/eleva/backup/postgresql:/opt/backup \
+postgres:12.2
+
+##### Executando container do Redis
+
+docker run -d --name redis -p 6379:6379 -t redis:alpine

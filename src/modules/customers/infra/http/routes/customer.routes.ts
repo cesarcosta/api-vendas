@@ -1,7 +1,7 @@
-import isAuthenticated from '@shared/http/middlewares/isAuthenticated';
+import isAuthenticated from '@shared/infra/http/middlewares/isAuthenticated';
 import { celebrate, Segments, Joi } from 'celebrate';
 import { Router } from 'express';
-import CustomerController from './controllers/CustomerController';
+import CustomerController from '../controllers/CustomerController';
 
 const customersRouter = Router();
 

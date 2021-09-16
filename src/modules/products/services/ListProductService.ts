@@ -9,9 +9,9 @@ export default class ListProductService {
     private productRepository: IProductRepository,
   ) {}
 
-  public async execute(): Promise<IProductPaginate[]> {
+  public async execute(): Promise<IProductPaginate> {
     const products = await this.productRepository.findAllPaginate();
 
-    return products;
+    return products as IProductPaginate;
   }
 }

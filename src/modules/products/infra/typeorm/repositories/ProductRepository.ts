@@ -1,7 +1,6 @@
 import { ICreateProduct } from '@modules/products/domain/models/ICreateProduct';
 import { IFindProducts } from '@modules/products/domain/models/IFindProducts';
 import { IProductPaginate } from '@modules/products/domain/models/IProductPaginate';
-import { IUpdateProduct } from '@modules/products/domain/models/IUpdateProduct';
 import { IProductRepository } from '@modules/products/domain/repositories/IProductRepository';
 import { getRepository, In, Repository } from 'typeorm';
 import Product from '../entities/Product';

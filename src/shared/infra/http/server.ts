@@ -31,6 +31,7 @@ app.use(routes);
 
 app.use(errors());
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((error: Error, request: Request, response: Response, _next: NextFunction) => {
   if (error instanceof AppError) {
     return response.status(error.statusCode).json({
@@ -38,6 +39,7 @@ app.use((error: Error, request: Request, response: Response, _next: NextFunction
       message: error.message,
     });
   }
+  console.log(error);
   return response.status(500).json({
     status: 'error',
     message: 'Internal Server Error',

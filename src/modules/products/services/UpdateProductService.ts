@@ -1,7 +1,7 @@
 import redisCache from '@shared/cache/RedisCache';
 import AppError from '@shared/errors/AppError';
-import { getCustomRepository } from 'typeorm';
-import ProductRepository from '../infra/typeorm/repositories/ProductRepository';
+import { inject, injectable } from 'tsyringe';
+import { IProductRepository } from '../domain/repositories/IProductRepository';
 
 interface IRequest {
   id: string;
@@ -10,17 +10,20 @@ interface IRequest {
   quantity: number;
 }
 
+@injectable()
 export default class UpdateProductService {
+  constructor(
+    @inject('ProductRepository')
+    private productRepository: IProductRepository,
+  ) {}
   public async execute({ id, name, price, quantity }: IRequest): Promise<void> {
-    const productRepository = getCustomRepository(ProductRepository);
-
-    const product = await productRepository.findOne(id);
+    const product = await this.productRepository.findOne(id);
 
     if (!product) {
       throw new AppError('Product not found!', 404);
     }
 
-    const productExists = await productRepository.findByName(name);
+    const productExists = await this.productRepository.findByName(name);
 
     if (productExists) {
       throw new AppError('There is already one product with this name!');
@@ -32,6 +35,6 @@ export default class UpdateProductService {
 
     await redisCache.invalidate('api-vendas-PRODUCT_LIST');
 
-    await productRepository.save(product);
+    await this.productRepository.save(product);
   }
 }

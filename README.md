@@ -1,5 +1,7 @@
 ## API Restful com Node.js, Express, Typescript, TypeORM, Postgres, Redis, Docker, ...
 
+Repositório do projeto do curso de API Restful de Vendas com Node.js, Typescript, TypeORM, entre outros, do professor Jorge Aluizio Alves ( AluizioDev )
+
 ### Estrutura do Projeto
 
 Estrutura de pastas:

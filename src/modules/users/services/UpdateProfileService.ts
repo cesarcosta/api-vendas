@@ -1,28 +1,31 @@
-import { getCustomRepository } from 'typeorm';
-import { compare, hash } from 'bcryptjs';
 import AppError from '@shared/errors/AppError';
-import User from '../infra/typeorm/entities/User';
-import UserRepository from '../infra/typeorm/repositories/UserRepository';
+import { compare, hash } from 'bcryptjs';
+import { IUser } from '../domain/models/IUser';
+import { IUserRepository } from '../domain/repositories/IUserRepository';
+import { IUpdateProfile } from '../domain/models/IUpdateProfile';
+import { inject, injectable } from 'tsyringe';
 
-interface IRequest {
-  user_id: string;
-  name: string;
-  email: string;
-  password?: string;
-  old_password?: string;
-}
-
+@injectable()
 export default class UpdateProfileService {
-  public async execute({ user_id, name, email, password, old_password }: IRequest): Promise<User> {
-    const userRepository = getCustomRepository(UserRepository);
+  constructor(
+    @inject('UserRepository')
+    private userRepository: IUserRepository,
+  ) {}
 
-    const user = await userRepository.findById(user_id);
+  public async execute({
+    user_id,
+    name,
+    email,
+    password,
+    old_password,
+  }: IUpdateProfile): Promise<IUser> {
+    const user = await this.userRepository.findById(user_id);
 
     if (!user) {
       throw new AppError('User not found!', 400);
     }
 
-    const userUpdatedEmail = await userRepository.findByEmail(email);
+    const userUpdatedEmail = await this.userRepository.findByEmail(email);
 
     if (userUpdatedEmail && userUpdatedEmail.id != user_id) {
       throw new AppError('There is already one user with this email!');
@@ -44,7 +47,7 @@ export default class UpdateProfileService {
 
     user.name = name;
     user.email = email;
-    await userRepository.save(user);
+    await this.userRepository.save(user);
 
     return user;
   }

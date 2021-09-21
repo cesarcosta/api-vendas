@@ -1,6 +1,7 @@
 import { ICreateProduct } from '@modules/products/domain/models/ICreateProduct';
 import { IFindProducts } from '@modules/products/domain/models/IFindProducts';
 import { IProductPaginate } from '@modules/products/domain/models/IProductPaginate';
+import { IUpdateStockProduct } from '@modules/products/domain/models/IUpdateStockProduct';
 import { IProductRepository } from '@modules/products/domain/repositories/IProductRepository';
 import { getRepository, In, Repository } from 'typeorm';
 import Product from '../entities/Product';
@@ -68,5 +69,9 @@ export default class ProductRepository implements IProductRepository {
 
   public async remove(product: Product): Promise<void> {
     await this.ormRepository.remove(product);
+  }
+
+  public async updateStock(products: IUpdateStockProduct[]): Promise<void> {
+    await this.ormRepository.save(products);
   }
 }

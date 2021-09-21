@@ -1,9 +1,9 @@
-import CustomerRepository from '@modules/customers/infra/typeorm/repositories/CustomerRepository';
-import ProductRepository from '@modules/products/infra/typeorm/repositories/ProductRepository';
-import OrderRepository from '../infra/typeorm/repositories/OrderRepository';
 import AppError from '@shared/errors/AppError';
-import { getCustomRepository } from 'typeorm';
-import Order from '../infra/typeorm/entities/Order';
+import { inject, injectable } from 'tsyringe';
+import { IOrderRepository } from '../domain/repositories/IOrderRepository';
+import { IProductRepository } from '@modules/products/domain/repositories/IProductRepository';
+import { ICustomerRepository } from '@modules/customers/domain/repositories/ICustomerRepository';
+import { IOrder } from '../domain/models/IOrder';
 
 interface IProduct {
   id: string;
@@ -15,19 +15,27 @@ interface IRequest {
   products: IProduct[];
 }
 
+@injectable()
 export default class CreateOrderService {
-  public async execute({ customer_id, products }: IRequest): Promise<Order> {
-    const orderRepository = getCustomRepository(OrderRepository);
-    const customerRepository = getCustomRepository(CustomerRepository);
-    const productRepository = getCustomRepository(ProductRepository);
+  constructor(
+    @inject('OrderRepository')
+    private orderRepository: IOrderRepository,
 
-    const customerExists = await customerRepository.findById(customer_id);
+    @inject('ProductRepository')
+    private productRepository: IProductRepository,
+
+    @inject('CustomerRepository')
+    private customerRepository: ICustomerRepository,
+  ) {}
+
+  public async execute({ customer_id, products }: IRequest): Promise<IOrder> {
+    const customerExists = await this.customerRepository.findById(customer_id);
 
     if (!customerExists) {
       throw new AppError('Could not find any customer with the given id!');
     }
 
-    const existsProducts = await productRepository.findAllByIds(products);
+    const existsProducts = await this.productRepository.findAllByIds(products);
 
     if (!existsProducts.length) {
       throw new AppError('Could not find any products with the given ids!');
@@ -60,7 +68,7 @@ export default class CreateOrderService {
       price: existsProducts.filter(p => p.id === product.id)[0].price,
     }));
 
-    const order = await orderRepository.createOrder({
+    const order = await this.orderRepository.createOrder({
       customer: customerExists,
       products: serializedProducts,
     });
@@ -73,7 +81,7 @@ export default class CreateOrderService {
         existsProducts.filter(p => p.id === product.product_id)[0].quantity - product.quantity,
     }));
 
-    await productRepository.save(updatedProductQuantity);
+    await this.productRepository.updateStock(updatedProductQuantity);
 
     return order;
   }

@@ -8,6 +8,8 @@ import { IUserRepository } from '@modules/users/domain/repositories/IUserReposit
 import UserRepository from '@modules/users/infra/typeorm/repositories/UserRepository';
 import UserTokenRepository from '@modules/users/infra/typeorm/repositories/UserTokenRepository';
 import { IUserTokenRepository } from '@modules/users/domain/repositories/IUserTokenRepository';
+import OrderRepository from '@modules/orders/infra/typeorm/repositories/OrderRepository';
+import { IOrderRepository } from '@modules/orders/domain/repositories/IOrderRepository';
 
 container.registerSingleton<ICustomerRepository>('CustomerRepository', CustomerRepository);
 
@@ -16,3 +18,5 @@ container.registerSingleton<IProductRepository>('ProductRepository', ProductRepo
 container.registerSingleton<IUserRepository>('UserRepository', UserRepository);
 
 container.registerSingleton<IUserTokenRepository>('UserTokenRepository', UserTokenRepository);
+
+container.registerSingleton<IOrderRepository>('OrderRepository', OrderRepository);
